@@ -1,0 +1,30 @@
+#!/bin/sh
+
+casks=$(brew cask list)
+color=$'\e[m'
+reset=$'\e[m'
+
+tempfoo=$(basename $0)
+TMPFILE=$(mktemp /tmp/${tempfoo}.XXXXXX)
+
+for cask in ${casks}
+do
+    brew cask info ${cask} > ${TMPFILE}
+
+    brew_version=$(egrep ^${cask} ${TMPFILE} | head -1 | awk '{print $2}')
+    installed_version=$(egrep ^/usr/local/Caskroom/${cask}/ ${TMPFILE} | head -1 | awk -F/ '{print $6}' | awk '{print $1}')
+
+    if [ ${installed_version} != ${brew_version} ]
+    then
+        color=$'\e[31m'
+    elif [ ${installed_version} = 'latest' -o ${brew_version} = 'latest' ]
+    then
+        color=$'\e[33m'
+    else
+        color=${reset}
+    fi
+
+    echo ${color}cask = ${cask}, brew = ${brew_version}, installed = ${installed_version}${reset}
+done
+
+rm -f ${TMPFILE}
