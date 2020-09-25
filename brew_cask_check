@@ -1,6 +1,6 @@
 #!/bin/sh
 
-casks=$(brew cask list)
+casks=$(brew list --cask)
 color=$'\e[m'
 reset=$'\e[m'
 
