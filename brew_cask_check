@@ -9,7 +9,7 @@ TMPFILE=$(mktemp /tmp/${tempfoo}.XXXXXX)
 
 for cask in ${casks}
 do
-    brew cask info ${cask} > ${TMPFILE}
+    brew info --cask ${cask} > ${TMPFILE}
 
     brew_version=$(egrep ^${cask} ${TMPFILE} | head -1 | awk '{print $2}')
     installed_version=$(egrep ^/usr/local/Caskroom/${cask}/ ${TMPFILE} | head -1 | awk -F/ '{print $6}' | awk '{print $1}')
